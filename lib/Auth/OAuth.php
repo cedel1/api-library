@@ -669,6 +669,8 @@ class OAuth extends ApiAuth implements AuthInterface
     {
         $this->log('makeRequest('.$url.', '.http_build_query($parameters).', '.$method.',...)');
 
+        list($url, $parameters) = $this->separateUrlParams($url, $parameters);
+
         $includeCallback = (isset($settings['includeCallback'])) ? $settings['includeCallback'] : false;
         $includeVerifier = (isset($settings['includeVerifier'])) ? $settings['includeVerifier'] : false;
 
@@ -975,5 +977,25 @@ class OAuth extends ApiAuth implements AuthInterface
     protected function isOauth1()
     {
         return strlen($this->_request_token_url) > 0;
+    }
+
+    /**
+     * Separates parameters from base URL
+     *
+     * @return array
+     */
+    protected function separateUrlParams($url, $params)
+    {
+        $a = explode('?', $url, 2);
+        if (!empty($a[1])) {
+            $b = explode('&', $a[1]);
+            foreach ($b as $k => $v) {
+                $par = explode('=', $v, 2);
+                $cleanParams[$par[0]] = $par[1] ? $par[1] : '';
+            }
+            $url = $a[0];
+            $params = array_merge($params, $cleanParams);
+        }
+        return array($url, $params);
     }
 }
