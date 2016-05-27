@@ -98,6 +98,18 @@ foreach ($parameters as $k => $p) {
         $cleanParams[] = $p;
     }
 }
+//remove params from API endpoint and append to params
+if (!empty($apiendpoint)) {
+    $a = explode('?', $apiendpoint, 2);
+    if (!empty($a[1])) {
+        $b = explode('&', $a[1]);
+        foreach ($b as $k => $v) {
+            $par = explode('=', $v, 2);
+            $cleanParams[] = array('key' => $par[0], 'value' => $par[1] ? $par[1] : '');
+        }
+        $apiendpoint = $a[0];
+    }
+}
 $parameters     = $cleanParams;
 $parameterCount = count($parameters);
 
