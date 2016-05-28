@@ -853,7 +853,7 @@ class OAuth extends ApiAuth implements AuthInterface
      */
     private function buildBaseString($baseURI, $method, $params)
     {
-        $r = $this->normalizeParameters($params);
+        $r = $this->normalizeParameters($params, true);
 
         return $method.'&'.$this->encode($baseURI).'&'.$this->encode($r);
     }
